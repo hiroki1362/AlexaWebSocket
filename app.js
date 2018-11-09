@@ -1,9 +1,33 @@
-const express = require("express");
-const app = express();
-const PORT = process.env.PROT || 3000;
+let WebSocketServer = require('ws').Server;
+let http = require("http");
+let express = require("express");
+let app = express();
 
-app.get('/', (req, res) => {
-	res.send("HELLO WORLD")
+app.use(express.static(__dirname + "/"));
+
+let server = http.createServer(app);
+let wss = new WebSocketServer({server:server})
+
+let connections = [];
+
+wss.on("connection", function (ws) {
+	connections.push(ws);
+	ws.on("close", function() {
+		connections = connections.filter(function (conn, i) {
+			return (conn === ws) ? false: true;
+		});
+	});
+	ws.on("message", function(message) {
+		console.log("message:-> ", message);
+		broadcast(JSON.stringify(message));
+	});
+
 });
 
-app.listen(PORT);
+function broadcast(message) {
+	connections.forEach(function(con, i) {
+		con.send(message);
+	});
+};
+
+server.listen(3000);
