@@ -1,34 +1,20 @@
-
-var WebSocketServer = require('ws').Server;
-var http = require("http");
-var express = require("express");
+var express = require('express');
 var app = express();
+var http = require('http').Server(app);
+const io = require('socket.io')(http);
+const PORT = process.env.PORT || 7000;
 
-app.use(express.static(__dirname + "/"));
-
-var server = http.createServer(app);
-var wss = new WebSocketServer({server:server})
-
-var connections = [];
-
-wss.on("connection", function (ws) {
-	connections.push(ws);
-	ws.on("close", function() {
-		connections = connections.filter(function (conn, i) {
-			return (conn === ws) ? false: true;
-		});
-	});
-	ws.on("message", function(message) {
-		console.log("message:-> ", message);
-		broadcast(JSON.stringify(message));
-	});
-
+app.get('/' , function(req, res){
+    res.sendFile(__dirname+'/index.html');
 });
 
-function broadcast(message) {
-	connections.forEach(function(con, i) {
-		con.send(message);
-	});
-};
+io.on('connection',function(socket){
+    socket.on('message',function(msg){
+        console.log('message: ' + msg);
+        io.emit('message', msg);
+    });
+});
 
-server.listen(8080);
+http.listen(PORT, function(){
+    console.log('server listening. Port:' + PORT);
+});
