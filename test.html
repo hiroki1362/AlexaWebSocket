@@ -7,8 +7,8 @@
         }
  
         var host = window.document.location.host.replace(/:.*/, '');
-        var ws = new WebSocket('wss://alexasocketapp.azurewebsites.net:3000');
-        console.log("WebSocket URL: " + 'ws://' + host + ':3000')
+        var ws = new WebSocket('wss://alexasocketapp.azurewebsites.net:443');
+        console.log("WebSocket URL: " + 'ws://' + host + ':443')
         ws.onmessage = function (event) {
             document.getElementById("messages").innerHTML += "<div>" + JSON.parse(event.data) + "</div>";
             console.log(JSON.parse(event.data));

@@ -1,3 +1,4 @@
+
 var WebSocketServer = require('ws').Server;
 var http = require("http");
 var express = require("express");
@@ -30,4 +31,4 @@ function broadcast(message) {
 	});
 };
 
-server.listen(3000);
+server.listen(443);
