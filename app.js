@@ -1,20 +1,38 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-const io = require('socket.io')(http);
-const PORT = process.env.PORT || 7000;
-
-app.get('/' , function(req, res){
-    res.sendFile(__dirname+'/index.html');
-});
-
-io.on('connection',function(socket){
-    socket.on('message',function(msg){
-        console.log('message: ' + msg);
-        io.emit('message', msg);
+var WebSocketServer = require('ws').Server
+    , http = require('http')
+    , express = require('express')
+    , app = express();
+ 
+app.use(express.static(__dirname + '/'));
+var server = http.createServer(app);
+var wss = new WebSocketServer({server:server});
+var port = process.env.PORT || 3000;
+ 
+//Websocket接続を保存しておく
+var connections = [];
+ 
+//接続時
+wss.on('connection', function (ws) {
+    //配列にWebSocket接続を保存
+    connections.push(ws);
+    //切断時
+    ws.on('close', function () {
+        connections = connections.filter(function (conn, i) {
+            return (conn === ws) ? false : true;
+        });
+    });
+    //メッセージ送信時
+    ws.on('message', function (message) {
+        console.log('message:', message);
+        broadcast(JSON.stringify(message));
     });
 });
-
-http.listen(PORT, function(){
-    console.log('server listening. Port:' + PORT);
-});
+ 
+//ブロードキャストを行う
+function broadcast(message) {
+    connections.forEach(function (con, i) {
+        con.send(message);
+    });
+};
+ 
+server.listen(port);
