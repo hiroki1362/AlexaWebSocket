@@ -1,14 +1,14 @@
-let WebSocketServer = require('ws').Server;
-let http = require("http");
-let express = require("express");
-let app = express();
+var WebSocketServer = require('ws').Server;
+var http = require("http");
+var express = require("express");
+var app = express();
 
 app.use(express.static(__dirname + "/"));
 
-let server = http.createServer(app);
-let wss = new WebSocketServer({server:server})
+var server = http.createServer(app);
+var wss = new WebSocketServer({server:server})
 
-let connections = [];
+var connections = [];
 
 wss.on("connection", function (ws) {
 	connections.push(ws);
