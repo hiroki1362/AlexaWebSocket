@@ -3,7 +3,7 @@ var app = express();
 var http = require('http').Server(app);
 const io = require('socket.io')(http);
 //const PORT = process.env.PORT || 7000;
-const PORT = 80;
+const PORT = 443;
 
 app.get('/' , function(req, res){
     res.sendFile(__dirname+'/index.html');
