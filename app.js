@@ -3,7 +3,7 @@ let http = require("http");
 let express = require("express");
 let app = express();
 
-app.use(express.static(__dirname + "/"));
+app.use(express.static(__dirname + "/index.html"));
 
 let server = http.createServer(app);
 let wss = new WebSocketServer({server:server})
