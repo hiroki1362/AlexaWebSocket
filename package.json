@@ -2,7 +2,7 @@
   "name": "websocket",
   "version": "1.0.0",
   "description": "websocket server for alexa",
-  "main": "app.js",
+  "main": "./app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
