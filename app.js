@@ -35,4 +35,6 @@ function broadcast(message) {
     });
 };
  
-server.listen(port);
+server.listen(port, function(){
+    console.log('server listening. Port:' + port);
+});
